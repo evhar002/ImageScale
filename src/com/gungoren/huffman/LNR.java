@@ -1,8 +1,5 @@
 package com.gungoren.huffman;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LNR {
 
     public Header encode(Node tree) {
@@ -11,32 +8,32 @@ public class LNR {
         return header;
     }
 
-    private void encode(Node root, Header header) {
-        if (root == null)
+    private void encode(Node node, Header header) {
+        if (node == null)
             return;
 
-        if (root.getLeft() == null && root.getRight() == null) {
-            header.getNodeValues().add(root.getValue());
+        if (node.isLeaf()) {
+            header.addNode(node.getValue());
         }
 
-        if (root.getLeft() != null) {
+        if (node.getLeft() != null) {
             header.addToPath("0");
         }
-        encode(root.getLeft(), header);
+        encode(node.getLeft(), header);
 
-        if (root.getRight() != null) {
+        if (node.getRight() != null) {
             header.addToPath("1");
         }
-        encode(root.getRight(), header);
+        encode(node.getRight(), header);
     }
 
     public Node decode (Header header) {
-        if (header.getTree().length() == 0)
+        if (header.getPath().length() == 0)
             return new Node(null, "");
         Node lastNode = new Node(null, "");
         Node root = lastNode;
-        for (int i = 0, j = 0; i < header.getTree().length(); i++) {
-            String n = String.valueOf(header.getTree().charAt(i));
+        for (int i = 0, j = 0; i < header.getPath().length(); i++) {
+            String n = String.valueOf(header.getPath().charAt(i));
             if ("0".equals(n)) {
                 lastNode = new Node(lastNode, "");
             } else {
@@ -64,7 +61,6 @@ public class LNR {
 
         Node G = new Node(root, "G");
         Node I = new Node(G, "I");
-        Node H = new Node(I, "H");
 
         Header header = lnr.encode(root);
         Node node = lnr.decode(header);

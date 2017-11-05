@@ -44,6 +44,10 @@ public class Node {
         this.right = right;
     }
 
+    public boolean isLeaf() {
+        return getLeft() == null && getRight() == null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

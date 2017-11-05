@@ -5,28 +5,22 @@ import java.util.List;
 
 public class Header {
 
-    private StringBuilder tree = new StringBuilder();
+    private StringBuilder path = new StringBuilder();
     private List<String> nodeValues = new ArrayList<>();
 
     public Header() {
     }
 
-    public Header(StringBuilder tree, List<String> nodeValues) {
-        this.tree = tree;
-        this.nodeValues = nodeValues;
+    public String getPath() {
+        return path.toString();
     }
 
-
-    public String getTree() {
-        return tree.toString();
-    }
-
-    public void setTree(String tree) {
-        this.tree = new StringBuilder(tree);
+    public void setPath(String path) {
+        this.path = new StringBuilder(path);
     }
 
     public void addToPath(String path){
-        tree.append(path);
+        this.path.append(path);
     }
 
     public List<String> getNodeValues() {
@@ -35,5 +29,9 @@ public class Header {
 
     public void setNodeValues(List<String> nodeValues) {
         this.nodeValues = nodeValues;
+    }
+
+    public void addNode(String nodeValue) {
+        getNodeValues().add(nodeValue);
     }
 }
