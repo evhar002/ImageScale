@@ -52,15 +52,16 @@ public class LNR {
 
     public static void main(String[] args) {
         LNR lnr = new LNR();
-        Node root = new Node (null, "F");
-        Node B = new Node(root, "B");
-        Node A = new Node(B, "A");
-        Node D = new Node(B, "D");
-        Node C = new Node(D, "C");
-        Node E = new Node(D, "E");
+        Node root = new Node (null, "-29");
+        Node B = new Node(root, "-15");
+        Node A = new Node(B, "e");
+        Node D = new Node(B, "-7");
+        Node C = new Node(D, "n");
+        Node E = new Node(D, "-2");
+        Node F = new Node(E, "m");
+        Node I = new Node(E, "l");
 
-        Node G = new Node(root, "G");
-        Node I = new Node(G, "I");
+        Node G = new Node(root, "a");
 
         Header header = lnr.encode(root);
         Node node = lnr.decode(header);

@@ -37,4 +37,15 @@ public class ImageScaleConverter {
         ImageIO.write(outImage, "bmp", outFile);
         return;
     }
+
+
+    public static void convertTo8Bit(String input, String output) throws IOException {
+        File inFile = new File(input);
+        File outFile = new File(output);
+        BufferedImage inImage = ImageIO.read(inFile);
+        BufferedImage outImage = ConvertUtil.convert8(inImage); // Converts to 8 Bit
+
+        ImageIO.write(outImage, "bmp", outFile);
+        return;
+    }
 }
