@@ -72,7 +72,7 @@ public class GaussGenerator {
         }
     }
 
-    private String generateGaussShaderKernelWeightsAndOffsets( int kernelSize, boolean forPreprocessorDefine, boolean workaroundForNoCLikeArrayInitialization)
+    private String generateGaussShaderKernelWeightsAndOffsets( int kernelSize)
     {
         // Gauss filter kernel & offset creation
         float[] inputKernel = getAppropriateSeparableGauss(kernelSize);
@@ -81,9 +81,9 @@ public class GaussGenerator {
         for( int i = (kernelSize/2); i >= 0; i-- )
         {
             if( i == (kernelSize/2) )
-                oneSideInputs[i] = inputKernel[i] * 0.5f;
+                oneSideInputs[(kernelSize/2) - i] = inputKernel[i] * 0.5f;
             else
-                oneSideInputs[i] = inputKernel[i];
+                oneSideInputs[(kernelSize/2) - i] = inputKernel[i];
         }
 
         int numSamples = oneSideInputs.length/2;
@@ -105,40 +105,20 @@ public class GaussGenerator {
 
         String indent = "    ";
 
-        String shaderCode = (forPreprocessorDefine)?(""):("");
-        String eol = (forPreprocessorDefine)?("\\\n"):("\n");
-        if( !forPreprocessorDefine) shaderCode += indent + "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////;" + eol;
-        if( !forPreprocessorDefine) shaderCode += indent + format( "// Kernel width %d x %d", kernelSize, kernelSize ) + eol;
-        if( !forPreprocessorDefine) shaderCode += indent + "//" + eol;
+        String shaderCode = ("");
+        String eol = "\n";
+        shaderCode += indent + "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////;" + eol;
+        shaderCode += indent + format( "// Kernel width %d x %d", kernelSize, kernelSize ) + eol;
         shaderCode += indent + format( "const int stepCount = %d;", numSamples ) + eol;
 
-        if( !workaroundForNoCLikeArrayInitialization )
-        {
-            if( !forPreprocessorDefine) shaderCode += indent + "//" + eol;
-            shaderCode += indent + "const float gWeights[stepCount] ={" + eol;
-            for( int i = 0; i < numSamples; i++ )
-                shaderCode += indent + format( "   %.5f", weights[i] ) + ((i!=(numSamples-1))?(","):("")) + eol;
-            shaderCode += indent + "};"+eol;
-            shaderCode += indent + "const float gOffsets[stepCount] ={"+eol;
-            for( int i = 0; i < numSamples; i++ )
-                shaderCode += indent + format( "   %.5f", offsets[i] ) + ((i!=(numSamples-1))?(","):("")) + eol;
-            shaderCode += indent + "};" + eol;
-        }
-        else
-        {
-            if( !forPreprocessorDefine) shaderCode += indent + "//" + eol;
-            shaderCode += indent + "float gWeights[stepCount];" + eol;
-            for( int i = 0; i < numSamples; i++ )
-                shaderCode += indent + format( " gWeights[%d] = %.5f;", i, weights[i] ) + eol;
-            shaderCode += indent + eol;
-            shaderCode += indent + "float gOffsets[stepCount];"+eol;
-            for( int i = 0; i < numSamples; i++ )
-                shaderCode += indent + format( " gOffsets[%d] = %.5f;", i, offsets[i] ) + eol;
-            shaderCode += indent + eol;
-        }
-
-        if( !forPreprocessorDefine) shaderCode += indent + "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////;" + eol;
-
+        shaderCode += indent + "const float gWeights[stepCount] ={" + eol;
+        for( int i = 0; i < numSamples; i++ )
+            shaderCode += indent + format( "   %.5f", weights[i] ) + ((i!=(numSamples-1))?(","):("")) + eol;
+        shaderCode += indent + "};"+eol;
+        shaderCode += indent + "const float gOffsets[stepCount] ={"+eol;
+        for( int i = 0; i < numSamples; i++ )
+            shaderCode += indent + format( "   %.5f", offsets[i] ) + ((i!=(numSamples-1))?(","):("")) + eol;
+        shaderCode += indent + "};" + eol;
         return shaderCode;
     }
 
